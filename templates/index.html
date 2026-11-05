@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Excel Eşleştirme Aracı</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 40px auto; padding: 0 20px; background: #f7f7f7; }
+        h1 { color: #2c3e50; }
+        .kutu { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .mesaj { padding: 12px; border-radius: 6px; background: #eaf4ff; border-left: 4px solid #3498db; margin-bottom: 15px; }
+        input[type=file] { padding: 10px; }
+        button { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; }
+        button:hover { background: #2980b9; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }
+        th { background: #f0f0f0; }
+        a.indir { display: inline-block; margin-top: 15px; background: #27ae60; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; }
+        a.indir:hover { background: #1e8449; }
+    </style>
+</head>
+<body>
+    <h1>📊 Excel Eşleştirme Aracı</h1>
+
+    <div class="kutu">
+        <form method="post" enctype="multipart/form-data">
+            <p>Excel dosyanızı (.xlsx / .xls) seçin. C ve U sütunları büyük/küçük harf duyarsız karşılaştırılır.</p>
+            <input type="file" name="excel" accept=".xlsx,.xls" required>
+            <button type="submit">Yükle ve Karşılaştır</button>
+        </form>
+    </div>
+
+    {% if mesaj %}
+        <div class="kutu">
+            <div class="mesaj">{{ mesaj }}</div>
+            {% if cikti_ad %}
+                <a class="indir" href="/indir/{{ cikti_ad }}">📥 Eşleşmeyenleri İndir</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if onizleme %}
+        <div class="kutu">
+            <h3>Önizleme (ilk {{ onizleme|length }} / {{ toplam }} satır)</h3>
+            <div style="overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            {% for k in kolonlar %}<th>{{ k }}</th>{% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for satir in onizleme %}
+                            <tr>
+                                {% for k in kolonlar %}<td>{{ satir[k] }}</td>{% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+</body>
+</html>
